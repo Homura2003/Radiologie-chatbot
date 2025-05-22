@@ -5,20 +5,18 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 import streamlit as st
-
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import Ollama  
 
 import os
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_KEY"]
 
-llm = LangChainInterface(
-    credentials=creds,
-    model='ollama run mistral:instruct',
-    params = {
-        'decoding_method':'sample',
-        'max_new_tokens':200,
-        'temperature':0.5
-    })   
+llm = Ollama(
+    model='mistral:instruct',
+    base_url='http://localhost:11434',  # Of jouw externe serveradres
+    temperature=0.5,
+    num_ctx=2048
+)
 
 st.title('Radiologie chatbot')
 
