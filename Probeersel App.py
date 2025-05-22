@@ -6,17 +6,11 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
-from langchain.llms import Ollama  
 
 import os
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_KEY"]
 
-llm = Ollama(
-    model='mistral:instruct',
-    base_url='http://localhost:11434',  # Of jouw externe serveradres
-    temperature=0.5,
-    num_ctx=2048
-)
+llm = ChatOpenAI(temperature=0.5)
 
 st.title('Radiologie chatbot')
 
