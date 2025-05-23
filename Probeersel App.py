@@ -6,13 +6,14 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
 
 import streamlit as st
-from langchain_community.llms import HuggingFaceHub
+from langchain_huggingface import HuggingFaceEndpoint
 
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
-llm = HuggingFaceHub(
-    repo_id="facebook/mbart-large-50-many-to-many-mmt",
+llm = HuggingFaceEndpoint(
+    endpoint_url="https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt",
+    task="text-generation",
     model_kwargs={
         "temperature": 0.7,
         "max_length": 512,
