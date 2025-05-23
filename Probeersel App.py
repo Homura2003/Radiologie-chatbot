@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/yhavinga/gpt2-medium-dutch",
+    endpoint_url="https://api-inference.huggingface.co/models/google/gemma-2b-it",
     task="text-generation",
     temperature=0.8,
     top_p=0.9,
@@ -44,6 +44,7 @@ if prompt:
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
     
+
 
 
     
