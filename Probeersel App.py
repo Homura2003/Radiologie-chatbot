@@ -9,7 +9,7 @@ import streamlit as st
 from langchain.llms import HuggingFaceHub
 
 import os
-os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACE_API_KEY"]
+os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceHub(
     repo_id="GroNLP/gpt2-medium-dutch",  
