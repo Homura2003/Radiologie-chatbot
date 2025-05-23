@@ -11,13 +11,15 @@ from langchain.llms import HuggingFaceHub
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
+# Initialize the multilingual model with Dutch support
 llm = HuggingFaceHub(
-    repo_id="GroNLP/gpt2-medium-dutch",  
+    repo_id="facebook/mbart-large-50-many-to-many-mmt",
     model_kwargs={
         "temperature": 0.7,
         "max_length": 512,
         "top_p": 0.95,
-        "do_sample": True
+        "do_sample": True,
+        "forced_bos_token_id": 250025  # Dutch language token
     }
 )
 
@@ -34,6 +36,7 @@ if prompt:
     st.session_state.messages.append({'role':'user', 'content':prompt})
     
     try:
+        # For HuggingFace, we can pass the prompt directly
         response = llm(prompt)
         
         st.chat_message('assistant').markdown(response)
@@ -45,4 +48,3 @@ if prompt:
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
     
-
