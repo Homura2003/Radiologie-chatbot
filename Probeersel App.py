@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
+    endpoint_url="https://api-inference.huggingface.co/models/facebook/opt-350m",
     task="text-generation",
     temperature=0.8,
     top_p=0.9,
@@ -44,5 +44,6 @@ if prompt:
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
     
+
 
     
