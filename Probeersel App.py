@@ -6,19 +6,19 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
 
 import streamlit as st
-from langchain_community.llms import HuggingFaceEndpoint
+from langchain_community.llms import HuggingFaceHub
 
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
-# Initialize the model using HuggingFace Hub API
-llm = HuggingFaceEndpoint(
+llm = HuggingFaceHub(
     repo_id="facebook/mbart-large-50-many-to-many-mmt",
-    task="text-generation",
-    temperature=0.7,
-    top_p=0.95,
-    do_sample=True,
-    model_kwargs={"max_length": 512}
+    model_kwargs={
+        "temperature": 0.7,
+        "max_length": 512,
+        "top_p": 0.95,
+        "do_sample": True
+    }
 )
 
 st.title('Radiologie chatbot')
@@ -34,7 +34,6 @@ if prompt:
     st.session_state.messages.append({'role':'user', 'content':prompt})
     
     try:
-        # Generate response using the API
         response = llm.invoke(prompt)
         
         st.chat_message('assistant').markdown(response)
@@ -45,5 +44,4 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
-    
     
