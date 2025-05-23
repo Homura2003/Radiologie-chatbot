@@ -12,12 +12,12 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/bigscience/bloom-560m",
+    endpoint_url="https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
     task="text-generation",
-    temperature=0.7,
-    top_p=0.95,
+    temperature=0.8,
+    top_p=0.9,
     do_sample=True,
-    max_new_tokens=512
+    max_new_tokens=256
 )
 
 st.title('Radiologie chatbot')
@@ -43,4 +43,6 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
+    
+
     
