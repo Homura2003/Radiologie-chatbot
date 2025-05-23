@@ -16,9 +16,9 @@ llm = HuggingFaceEndpoint(
     repo_id="facebook/mbart-large-50-many-to-many-mmt",
     task="text-generation",
     temperature=0.7,
-    max_length=512,
     top_p=0.95,
-    do_sample=True
+    do_sample=True,
+    model_kwargs={"max_length": 512}
 )
 
 st.title('Radiologie chatbot')
@@ -45,4 +45,5 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
+    
     
