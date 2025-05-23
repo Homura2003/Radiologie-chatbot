@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/facebook/opt-350m",
+    endpoint_url="https://api-inference.huggingface.co/models/bigscience/bloom-560m",
     task="text-generation",
     temperature=0.7,
     top_p=0.95,
