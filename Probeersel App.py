@@ -17,7 +17,7 @@ llm = HuggingFaceEndpoint(
     temperature=0.7,
     top_p=0.95,
     do_sample=True,
-    model_kwargs={"max_length": 512}
+    model_kwargs={"max_new_tokens": 512}
 )
 
 st.title('Radiologie chatbot')
