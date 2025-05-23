@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt",
+    endpoint_url="https://api-inference.huggingface.co/models/pdelobelle/robbert-v2-dutch-base",
     task="text-generation",
     temperature=0.7,
     top_p=0.95,
@@ -43,5 +43,4 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
-    
     
