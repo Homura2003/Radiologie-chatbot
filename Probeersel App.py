@@ -14,12 +14,10 @@ os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 llm = HuggingFaceEndpoint(
     endpoint_url="https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt",
     task="text-generation",
-    model_kwargs={
-        "temperature": 0.7,
-        "max_length": 512,
-        "top_p": 0.95,
-        "do_sample": True
-    }
+    temperature=0.7,
+    top_p=0.95,
+    do_sample=True,
+    model_kwargs={"max_length": 512}
 )
 
 st.title('Radiologie chatbot')
