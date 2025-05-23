@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/BramVanroy/fietje-2",
+    endpoint_url="https://api-inference.huggingface.co/models/yhavinga/gpt2-medium-dutch",
     task="text-generation",
     temperature=0.8,
     top_p=0.9,
