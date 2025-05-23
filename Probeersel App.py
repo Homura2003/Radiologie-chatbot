@@ -1,25 +1,25 @@
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.chains import retrieval_qa
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
 
 import streamlit as st
-from langchain.llms import HuggingFaceHub
+from langchain_community.llms import HuggingFaceEndpoint
 
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
-# Initialize the multilingual model with Dutch support
-llm = HuggingFaceHub(
+# Initialize the model using HuggingFace Hub API
+llm = HuggingFaceEndpoint(
     repo_id="facebook/mbart-large-50-many-to-many-mmt",
+    task="text-generation",
     model_kwargs={
         "temperature": 0.7,
         "max_length": 512,
         "top_p": 0.95,
-        "do_sample": True,
-        "forced_bos_token_id": 250025  # Dutch language token
+        "do_sample": True
     }
 )
 
@@ -36,8 +36,8 @@ if prompt:
     st.session_state.messages.append({'role':'user', 'content':prompt})
     
     try:
-        # For HuggingFace, we can pass the prompt directly
-        response = llm(prompt)
+        # Generate response using the API
+        response = llm.invoke(prompt)
         
         st.chat_message('assistant').markdown(response)
         st.session_state.messages.append(
