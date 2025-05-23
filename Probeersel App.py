@@ -17,7 +17,7 @@ llm = HuggingFaceEndpoint(
     temperature=0.7,
     top_p=0.95,
     do_sample=True,
-    model_kwargs={"max_new_tokens": 512}
+    max_new_tokens=512
 )
 
 st.title('Radiologie chatbot')
@@ -43,4 +43,5 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
+    
     
