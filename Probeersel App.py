@@ -13,7 +13,14 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 model = AutoModelForCausalLM.from_pretrained("BramVanroy/GEITje-7B-ultra") 
-
+llm = HuggingFaceEndpoint(
+    repo_id="BramVanroy/GEITje-7B-ultra",
+    task="text-generation",
+    temperature=0.7,
+    top_p=0.95,
+    do_sample=True,
+    max_new_tokens=512
+)
 st.title('Radiologie chatbot')
 
 if 'messages' not in st.session_state:
