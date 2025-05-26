@@ -12,7 +12,7 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    repo_id="TheBloke/Llama-2-13B-Chat-Dutch-GPTQ",
+    repo_id="BramVanroy/GEITje-7B-ultra",
     task="text-generation",
     temperature=0.7,
     top_p=0.95,
@@ -43,6 +43,8 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
+    
+
     
 
 
