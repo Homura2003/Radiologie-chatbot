@@ -4,13 +4,14 @@ from langchain.chains import retrieval_qa
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
+from transformers import AutoModelForCausalLM
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
-
+model = AutoModelForCausalLM.from_pretrained("BramVanroy/GEITje-7B-ultra") 
 llm = HuggingFaceEndpoint(
     repo_id="BramVanroy/GEITje-7B-ultra",
     task="text-generation",
