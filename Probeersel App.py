@@ -12,12 +12,12 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://api-inference.huggingface.co/models/BramVanroy/falcon-40b-ft-alpaca-dolly-dutch",
+    repo_id="TheBloke/Llama-2-13B-Chat-Dutch-GPTQ",
     task="text-generation",
-    temperature=0.4,
-    top_p=0.9,
+    temperature=0.7,
+    top_p=0.95,
     do_sample=True,
-    max_new_tokens=128
+    max_new_tokens=512
 )
 
 st.title('Radiologie chatbot')
