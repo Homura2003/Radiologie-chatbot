@@ -4,7 +4,7 @@ from langchain.chains import retrieval_qa
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
-from transformers import pipeline, TFAutoModel, AutoTokenizer
+from transformers import pipeline, TFAutoModelForCausalLM, AutoTokenizer
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
@@ -15,7 +15,7 @@ os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 try:
     model_name = "GroNLP/gpt2-small-dutch"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = TFAutoModel.from_pretrained(model_name)
+    model = TFAutoModelForCausalLM.from_pretrained(model_name)
     
     pipe = pipeline(
         "text-generation",
@@ -67,7 +67,6 @@ try:
 
 except Exception as e:
     st.error(f"Er is een fout opgetreden bij het initialiseren van de applicatie: {str(e)}")
-
 
 
     
