@@ -4,32 +4,16 @@ from langchain.chains import retrieval_qa
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-import torch
-import os
+from transformers import pipeline
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 
+import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 try:
-    model_name = "GroNLP/gpt2-small-dutch"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.float32,
-        low_cpu_mem_usage=True
-    )
-
-    chatbot = pipeline(
-        "text-generation",
-        model=model,
-        tokenizer=tokenizer,
-        max_length=2048,
-        truncation=True,
-        pad_token_id=tokenizer.eos_token_id
-    )
+    pipe = pipeline("text-generation", model="GroNLP/gpt2-small-dutch")
 
     st.title('Radiologie chatbot')
 
@@ -54,7 +38,7 @@ try:
                 for msg in st.session_state.messages
             ])
             
-            response = chatbot(
+            response = pipe(
                 conversation_text,
                 max_new_tokens=512,
                 do_sample=True,
@@ -74,6 +58,7 @@ try:
 
 except Exception as e:
     st.error(f"Er is een fout opgetreden bij het initialiseren van de applicatie: {str(e)}")
+
 
     
 
