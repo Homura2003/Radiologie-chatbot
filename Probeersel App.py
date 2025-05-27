@@ -13,11 +13,24 @@ os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 MODEL_DIR='yhavinga/gpt2-large-dutch'
 from transformers import pipeline, GPT2Tokenizer, GPT2LMHeadModel
-tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR, padding_side='left')
+tokenizer.pad_token = tokenizer.eos_token
 model = GPT2LMHeadModel.from_pretrained(MODEL_DIR)
-generator = pipeline('text-generation', model, tokenizer=tokenizer, truncation=True)
+model.config.pad_token_id = model.config.eos_token_id
 
-generated_text = generator('Het eiland West-', max_new_tokens=100, do_sample=True, top_k=40, top_p=0.95, repetition_penalty=2.0)
+generator = pipeline('text-generation', 
+                    model=model, 
+                    tokenizer=tokenizer, 
+                    truncation=True,
+                    max_length=1024,
+                    device='cpu')
+
+generated_text = generator('Het eiland West-', 
+                          max_new_tokens=100, 
+                          do_sample=True, 
+                          top_k=40, 
+                          top_p=0.95, 
+                          repetition_penalty=2.0)
 st.title('Radiologie chatbot')
 
 if 'messages' not in st.session_state:
@@ -41,6 +54,7 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
+
 
     
 
