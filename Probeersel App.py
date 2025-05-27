@@ -60,6 +60,7 @@ except Exception as e:
     st.error(f"Er is een fout opgetreden bij het initialiseren van de applicatie: {str(e)}")
 
 
+
     
 
 
