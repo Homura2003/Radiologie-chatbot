@@ -11,15 +11,13 @@ from langchain_huggingface import HuggingFaceEndpoint
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
-llm = HuggingFaceEndpoint(
-    repo_id="TheBloke/Llama-2-13B-Chat-Dutch-GPTQ",
-    task="text-generation",
-    temperature=0.7,
-    top_p=0.95,
-    do_sample=True,
-    max_new_tokens=512
-)
+MODEL_DIR='yhavinga/gpt2-large-dutch'
+from transformers import pipeline, GPT2Tokenizer, GPT2LMHeadModel
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
+model = GPT2LMHeadModel.from_pretrained(MODEL_DIR)
+generator = pipeline('text-generation', model, tokenizer=tokenizer)
 
+generated_text = generator('Het eiland West-', max_length=100, do_sample=True, top_k=40, top_p=0.95, repetition_penalty=2.0))
 st.title('Radiologie chatbot')
 
 if 'messages' not in st.session_state:
