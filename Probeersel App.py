@@ -6,15 +6,15 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 import torch
+import os
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 
-import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 try:
-    model_name = "BramVanroy/GEITje-7B-ultra"
+    model_name = "GroNLP/gpt2-small-dutch"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
