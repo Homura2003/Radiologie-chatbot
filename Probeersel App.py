@@ -15,9 +15,9 @@ MODEL_DIR='yhavinga/gpt2-large-dutch'
 from transformers import pipeline, GPT2Tokenizer, GPT2LMHeadModel
 tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
 model = GPT2LMHeadModel.from_pretrained(MODEL_DIR)
-generator = pipeline('text-generation', model, tokenizer=tokenizer)
+generator = pipeline('text-generation', model, tokenizer=tokenizer, truncation=True)
 
-generated_text = generator('Het eiland West-', max_length=100, do_sample=True, top_k=40, top_p=0.95, repetition_penalty=2.0)
+generated_text = generator('Het eiland West-', max_new_tokens=100, do_sample=True, top_k=40, top_p=0.95, repetition_penalty=2.0)
 st.title('Radiologie chatbot')
 
 if 'messages' not in st.session_state:
