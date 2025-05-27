@@ -4,7 +4,7 @@ from langchain.chains import retrieval_qa
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
-from transformers import pipeline, Conversation
+from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
@@ -12,47 +12,64 @@ from langchain_huggingface import HuggingFaceEndpoint
 import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
-chatbot = pipeline(
-    "conversational", 
-    model="BramVanroy/GEITje-7B-ultra", 
-    model_kwargs={
-        "load_in_8bit": True, 
-        "attn_implementation": "flash_attention_2",
-        "max_length": 2048,
-        "truncation": True,
-        "pad_token_id": 50256
-    }, 
+model_name = "BramVanroy/GEITje-7B-ultra"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    load_in_8bit=True,
     device_map="auto"
+)
+
+chatbot = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    max_length=2048,
+    truncation=True,
+    pad_token_id=tokenizer.eos_token_id
 )
 
 st.title('Radiologie chatbot')
 
-if 'conversation' not in st.session_state:
-    st.session_state.conversation = Conversation([
+if 'messages' not in st.session_state:
+    st.session_state.messages = [
         {"role": "system", "content": "Je bent een behulpzame assistent gespecialiseerd in radiologie."}
-    ])
+    ]
 
-for message in st.session_state.conversation.messages:
-    if message["role"] != "system": 
+for message in st.session_state.messages:
+    if message["role"] != "system":
         st.chat_message(message["role"]).markdown(message["content"])
 
 prompt = st.chat_input('Stel hier je vraag')
 
 if prompt:
     st.chat_message('user').markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
     
     try:
-        st.session_state.conversation.add_user_input(prompt)
+        conversation_text = "\n".join([
+            f"{'Assistant' if msg['role'] == 'assistant' else 'User'}: {msg['content']}"
+            for msg in st.session_state.messages
+        ])
         
-        st.session_state.conversation = chatbot(st.session_state.conversation)
+        response = chatbot(
+            conversation_text,
+            max_new_tokens=512,
+            do_sample=True,
+            temperature=0.7,
+            top_p=0.95
+        )[0]['generated_text']
         
-        response = st.session_state.conversation.messages[-1]["content"]
+        response = response.split("Assistant: ")[-1].strip()
         
         st.chat_message('assistant').markdown(response)
+        st.session_state.messages.append({"role": "assistant", "content": response})
         
     except Exception as e:
         error_message = f"Er is een fout opgetreden: {str(e)}"
         st.chat_message('assistant').markdown(error_message)
+        st.session_state.messages.append({"role": "assistant", "content": error_message})
+
 
 
 
