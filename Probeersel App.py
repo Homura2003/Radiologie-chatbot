@@ -16,8 +16,7 @@ model_name = "BramVanroy/GEITje-7B-ultra"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    load_in_8bit=True,
-    device_map="auto"
+    device_map="cpu"
 )
 
 chatbot = pipeline(
@@ -26,7 +25,8 @@ chatbot = pipeline(
     tokenizer=tokenizer,
     max_length=2048,
     truncation=True,
-    pad_token_id=tokenizer.eos_token_id
+    pad_token_id=tokenizer.eos_token_id,
+    device="cpu"
 )
 
 st.title('Radiologie chatbot')
