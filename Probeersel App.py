@@ -4,7 +4,7 @@ from langchain.chains import retrieval_qa
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
-from transformers import pipeline
+from transformers import pipeline, TFAutoModel, AutoTokenizer
 
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
@@ -13,7 +13,16 @@ import os
 os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 try:
-    pipe = pipeline("text-generation", model="GroNLP/gpt2-small-dutch")
+    model_name = "GroNLP/gpt2-small-dutch"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = TFAutoModel.from_pretrained(model_name)
+    
+    pipe = pipeline(
+        "text-generation",
+        model=model,
+        tokenizer=tokenizer,
+        framework="tf"
+    )
 
     st.title('Radiologie chatbot')
 
