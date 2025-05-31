@@ -13,7 +13,7 @@ import requests
 
 os.environ["HUGGINGFACE_API_KEY"] = "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"
 
-API_URL = "https://api-inference.huggingface.co/models/TheBloke/Llama-2-13B-Chat-Dutch-GPTQ"
+API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom"
 headers = {"Authorization": f"Bearer {os.environ['HUGGINGFACE_API_KEY']}"}
 
 def query(payload):
