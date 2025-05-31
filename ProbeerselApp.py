@@ -9,7 +9,16 @@ import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 
 import os
-os.environ["HUGGINGFACE_API_KEY"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+import requests
+
+os.environ["HUGGINGFACE_API_KEY"] = "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"
+
+API_URL = "https://api-inference.huggingface.co/models/TheBloke/Llama-2-13B-Chat-Dutch-GPTQ"
+headers = {"Authorization": f"Bearer {os.environ['HUGGINGFACE_API_KEY']}"}
+
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 llm = HuggingFaceEndpoint(
     repo_id="TheBloke/Llama-2-13B-Chat-Dutch-GPTQ",
@@ -33,7 +42,7 @@ if prompt:
     st.session_state.messages.append({'role':'user', 'content':prompt})
     
     try:
-        response = llm.invoke(prompt)
+        response = query({"inputs": prompt})
         
         st.chat_message('assistant').markdown(response)
         st.session_state.messages.append(
@@ -43,12 +52,12 @@ if prompt:
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
-    
 
 
 
 
-    
 
 
-    
+
+
+
