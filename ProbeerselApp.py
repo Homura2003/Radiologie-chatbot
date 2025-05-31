@@ -1,10 +1,19 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from optimum.transformers import GPTQConfig, AutoModelForCausalLM
+from transformers import AutoTokenizer
 import streamlit as st
+
+# Installeer optimum als het nog niet is geïnstalleerd:
+pip install optimum
 
 # Laad het model en de tokenizer
 MODEL_NAME = "TheBloke/Llama-2-13B-Chat-Dutch-GPTQ"
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, device_map="auto", trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_NAME,
+    device_map="auto",
+    trust_remote_code=True,
+    quantization_config=GPTQConfig()  # Specificeer GPTQ-configuratie
+)
 
 st.title('Radiologie chatbot')
 
