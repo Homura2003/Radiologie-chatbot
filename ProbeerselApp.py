@@ -1,30 +1,10 @@
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.indexes import VectorstoreIndexCreator
-from langchain.chains import retrieval_qa
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import HumanMessage, AIMessage
-
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import streamlit as st
-import os
-import requests
 
-os.environ["HUGGINGFACE_API_KEY"] = "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"
-
-API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom"
-headers = {"Authorization": f"Bearer {os.environ['HUGGINGFACE_API_KEY']}"}
-
-def query(payload):
-    try:
-        response = requests.post(API_URL, headers=headers, json=payload)
-        response.raise_for_status()  # Controleer op HTTP-fouten
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"HTTP-fout: {e}")
-        return {"error": str(e)}
-    except ValueError as e:
-        print(f"JSON-fout: {e}")
-        return {"error": "Ongeldige JSON-respons"}
+# Laad het model en de tokenizer
+MODEL_NAME = "TheBloke/Llama-2-13B-Chat-Dutch-GPTQ"
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, device_map="auto", trust_remote_code=True)
 
 st.title('Radiologie chatbot')
 
@@ -32,15 +12,20 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 for message in st.session_state.messages:
     st.chat_message(message['role']).markdown(message['content'])
+
 prompt = st.chat_input('Stel hier je vraag')
 
 if prompt:
     st.chat_message('user').markdown(prompt)
     st.session_state.messages.append({'role': 'user', 'content': prompt})
-    
+
     try:
-        response = query({"inputs": prompt})
-        assistant_response = response.get("generated_text", "Geen antwoord ontvangen.")
+        # Tokenize de input prompt
+        inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+        
+        # Genereer een antwoord
+        outputs = model.generate(inputs["input_ids"], max_length=512, temperature=0.7, top_p=0.95)
+        assistant_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
         
         st.chat_message('assistant').markdown(assistant_response)
         st.session_state.messages.append({'role': 'assistant', 'content': assistant_response})
