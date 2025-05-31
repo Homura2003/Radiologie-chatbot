@@ -6,8 +6,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import HumanMessage, AIMessage
 
 import streamlit as st
-from langchain_huggingface import HuggingFaceEndpoint
-
 import os
 import requests
 
@@ -27,19 +25,6 @@ def query(payload):
     except ValueError as e:
         print(f"JSON-fout: {e}")
         return {"error": "Ongeldige JSON-respons"}
-
-llm = HuggingFaceEndpoint(
-    repo_id="TheBloke/Llama-2-13B-Chat-Dutch-GPTQ",
-    task="text-generation",
-    temperature=0.7,
-    top_p=0.95,
-    do_sample=True,
-    max_new_tokens=512
-)
-
-prompt = "Wat is radiologie?"
-response = llm.invoke(prompt)
-print(response)
 
 st.title('Radiologie chatbot')
 
