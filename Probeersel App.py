@@ -40,7 +40,7 @@ if prompt:
             {'role':'assistant', 'content':response})
     except Exception as e:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"    
-        message = template.format(type(ex).__name__, ex.args)
+        message = template.format(type(e).__name__, e.args)
         print(message)
         error_message = f"Er is een fout opgetreden:eght4h {str(e)}"
         st.chat_message('assistant').markdown(error_message)
