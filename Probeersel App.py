@@ -39,7 +39,10 @@ if prompt:
         st.session_state.messages.append(
             {'role':'assistant', 'content':response})
     except Exception as e:
-        error_message = f"Er is een fout opgetreden: {str(e)}"
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"    
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
+        error_message = f"Er is een fout opgetreden:eght4h {str(e)}"
         st.chat_message('assistant').markdown(error_message)
         st.session_state.messages.append(
             {'role':'assistant', 'content':error_message})
