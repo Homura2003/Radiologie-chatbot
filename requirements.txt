@@ -1,6 +1,6 @@
+torch>=2.5.0
 streamlit>=1.32.0
 transformers==4.43.0
-torch>=2.5.0
 langchain>=0.1.0
 langchain-community>=0.0.10
 langchain-huggingface>=0.0.5
@@ -9,4 +9,3 @@ python-dotenv>=1.0.0
 accelerate==0.31.0
 bitsandbytes>=0.41.0
 sentence-transformers>=2.2.2
-flash-attn>=2.5.8
